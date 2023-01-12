@@ -1,397 +1,193 @@
-//Fenando Alvarez Rodriguez de Legisima
-//fernando.alvarezr@udc.es
-//Brais Sanchez Ferreiro
-//brais.sferreiro@udc.es
-#include <time.h>
-#include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <math.h>
 #include <sys/time.h>
-#include <string.h>
 
-#define UMBRAL 1
 #define K 1000
 
-enum tCota {
-    SUB, AJU, SOBR
+double microsegundos();
+
+int fib1(int n);
+
+int fib2(int n);
+
+int fib3(int n);
+
+void timeRecord(int n, int fib);
+
+void testfib1();
+
+void testfib2();
+
+void testfib3();
+
+void tabla(int n);
+
+/* obtiene la hora actual en microsegundos */
+
+struct fib {
+    int (*fib_fun)(int n);
+} fibs[] = {
+        {fib1},
+        {fib2},
+        {fib3}
 };
-typedef struct Cota {
 
-    double value;
-    char *string;
-
-} cota;
-
-cota cAscendeteIns(int n, enum tCota t) {
-
-    cota c;
-    switch (t) {
-        case SUB:
-            c.value = (pow(n, 0.8));
-            c.string = "__[t(n)/n^0.8]____";
-            break;
-        case AJU:
-            c.value = n;
-            c.string = "[t(n)/n]______";
-            break;
-        case SOBR:
-            c.value = (pow(n, 1.2));
-            c.string = "[t(n)/n^1.2]___";
-            break;
-        default:
-            c.value = 0;
-            break;
-    }
-    return c;
-}
-
-cota cDescendeteIns(int n, enum tCota t) {
-
-    cota c;
-    switch (t) {
-        case SUB:
-
-            c.value = (pow(n, 1.8));
-            c.string = "__[t(n)/n^1.8]___";
-            break;
-
-        case AJU:
-            c.value = (n * n);
-            c.string = "[t(n)/n^2]______";
-            break;
-
-        case SOBR:
-            c.value = (pow(n, 2.2));
-            c.string = "[t(n)/n^2.2]___";
-            break;
-
-        default:
-            c.value = 0;
-            break;
-
-    }
-    return c;
-
-}
-
-cota cAleatorioIns(int n, enum tCota t) {
-
-    cota c;
-    switch (t) {
-        case SUB:
-
-            c.value = (pow(n, 1.8));
-            c.string = "__[t(n)/n^1.8]___";
-            break;
-
-        case AJU:
-            c.value = (n * n);
-            c.string = "[t(n)/n^2]______";
-            break;
-
-        case SOBR:
-            c.value = (pow(n, 2.2));
-            c.string = "[t(n)/n^2.2]___";
-            break;
-
-        default:
-            c.value = 0;
-            break;
-    }
-
-    return c;
-
-}
-
-cota cAscendeteRap(int n, enum tCota t) {
-
-    cota c;
-
-    switch (t) {
-        case SUB:
-            c.string =  UMBRAL == 1 ? "__[t(n)/n^0.8]___" : "__[t(n)/n^2.2]___";
-            c.value = pow(n, 0.8);
-            break;
-        case AJU:
-            c.string = UMBRAL == 1 ? "[t(n)/n^0.95 * log2 n]_" : UMBRAL == 10 ? "[t(n)/n^0.99 * log2 n]_" : "[t(n)/n^1.06 * log2 n]_";
-            c.value = UMBRAL == 1 ? pow(n, 0.95) * log2(n) : UMBRAL == 10 ? pow(n, 0.99) * log2(n) : pow(n, 1.06) * log2(n);
-            break;
-        case SOBR:
-            c.string =  UMBRAL == 1 ? "[t(n)/n^1.2]" : UMBRAL == 10 ? "[t(n)/n^1.2]" : "[t(n)/n^1.3]";
-            c.value = UMBRAL == 1 ? pow(n, 1.2) : UMBRAL == 10 ? pow(n, 1.2) : pow(n, 1.3);
-            break;
-        default:
-            c.value = 0;
-            break;
-    }
-    return c;
-
-}
-
-cota cDescendeteRap(int n, enum tCota t) {
-
-    cota c;
-
-    switch (t) {
-        case SUB:
-            c.string = "__[t(n)/n]______";
-            c.value = n;
-            break;
-        case AJU:
-            c.string =  UMBRAL == 1 ? "[t(n)/n^1.06]______" : "[t(n)/n^1.1]______";
-            c.value = UMBRAL == 1 ? pow(n, 1.06) : pow(n, 1.1);
-            break;
-        case SOBR:
-            c.string = "[t(n)/n^1.3]";
-            c.value = pow(n, 1.3);
-            break;
-        default:
-            c.value = 0;
-            break;
-    }
-    return c;
-}
-
-cota cAleatorioRap(int n, enum tCota t) {
-
-    cota c;
-
-    switch (t) {
-        case SUB:
-            c.string = "__[t(n)/n]___";
-            c.value = n;
-            break;
-        case AJU:
-            c.string =  UMBRAL == 1 ? "[t(n)/n^1.01]______" : UMBRAL == 10 ? "[t(n)/n^1.14]______" : "[t(n)/n^1.1]______1";
-            c.value = UMBRAL == 1 ? pow(n, 1.1) : UMBRAL == 10 ? pow(n, 1.14) : pow(n, 1.1);
-            break;
-        case SOBR:
-            c.string = "[t(n)/n^1.4]___";
-            c.value = pow(n, 1.4);
-            break;
-        default:
-            c.value = 0;
-            break;
-    }
-    return c;
-
-}
-
-void ord_ins(int v[], int n) {
-    int i, x, j;
-
-    for (i = 0; i < n; i++) {
-        x = v[i];
-        j = i - 1;
-        while (j >= 0 && v[j] > x) {
-            v[j + 1] = v[j];
-            j = j - 1;
-        }
-        v[j + 1] = x;
-    }
-}
-
-void intercambiar(int v[], int x, int y) {
-
-    int aux;
-    aux = v[x];
-    v[x] = v[y];
-    v[y] = aux;
-}
-
-void ordenarAux(int v[], int izq, int der) {
-
-    int x, i, j, pivote;
-    if (izq + UMBRAL <= der) {
-        x = (rand() % (der - izq + 1)) + izq;
-
-        pivote = v[x];
-        intercambiar(v, izq, x);
-        i = izq + 1;
-        j = der;
-
-        while (i <= j) {
-            while (i <= der && v[i] < pivote) {
-                i = i + 1;
-            }
-            while (v[j] > pivote) {
-                j = j - 1;
-            }
-            if (i <= j) {
-                intercambiar(v, i, j);
-                i = i + 1;
-                j = j - 1;
-
-            }
-        }
-        intercambiar(v, izq, j);
-        ordenarAux(v, izq, j - 1);
-        ordenarAux(v, j + 1, der);
-    }
-}
-
-void ord_rapida(int v[], int n) {
-    ordenarAux(v, 0, n - 1);
-    if (UMBRAL > 1) {
-        ord_ins(v, n);
-    }
-}
-
-void inicializar_semilla() {
-    srand(time(NULL));
-}
-
-void aleatorio(int v[], int n) { /* se generan números pseudoaleatorio entre -n y +n */
-    int i, m = 2 * n + 1;
-    for (i = 0; i < n; i++)
-        v[i] = (rand() % m) - n;
-}
-
-void ascendente(int v[], int n) {
-
-    int i;
-    for (i = 0; i < n; i++) {
-        v[i] = i;
-    }
-}
-
-void descendente(int v[], int n) {
-
-    int i;
-    for (i = n; i > 0; --i) {
-        v[n - i] = i - 1;
-    }
-}
 
 double microsegundos() {
     struct timeval t;
-    if (gettimeofday(&t, NULL) < 0) {
+    if (gettimeofday(&t, NULL) < 0)
         return 0.0;
-    }
     return (t.tv_usec + t.tv_sec * 1000000.0);
 }
 
-void print_vector(int v[], int n) {
-    int i;
-    printf("  [");
-    for (i = 0; i < n; i++) {
-        printf("%3d", v[i]);
-        if (i != n - 1) {
-            printf(",");
-        }
+
+int fib1(int n) {
+
+    if (n < 2) return n;
+    else return fib1(n - 1) + fib1(n - 2);
+}
+
+int fib2(int n) {
+
+    int i = 1, j = 0;
+    for (int k = 0; k < n; ++k) {
+
+        j = i + j;
+        i = j - i;
     }
-    printf("]\n");
+    return j;
 }
 
-void OrdenaryDesordenar(void (*ini)(int v[], int n), void(*algo)(int v[], int n)) {
-
-    int n = 10;
-    int v[n];
-
-    ini(v, n);
-    printf("\n- Desordenado :\t");
-    print_vector(v, n);
-    algo(v, n);
-    printf("\n- Ordenado :\t");
-    print_vector(v, n);
-
-}
-
-void TestOrdenacion() {
-
-    printf("\nOrd Ins Ascendete\n");
-    OrdenaryDesordenar(ascendente, ord_ins);
-    printf("\nOrd Ins Descendete\n");
-    OrdenaryDesordenar(descendente, ord_ins);
-    printf("\nOrd Ins Aleatoria\n");
-    OrdenaryDesordenar(aleatorio, ord_ins);
-    printf("\nOrd Rap Ascendete\n");
-    OrdenaryDesordenar(ascendente, ord_rapida);
-    printf("\nOrd Rap Descendete\n");
-    OrdenaryDesordenar(descendente, ord_rapida);
-    printf("\nOrd Rap Aleatoria\n");
-    OrdenaryDesordenar(aleatorio, ord_rapida);
+int fib3(int n) {
+    int i, j, k, h, t;
+    i = 1;
+    j = 0;
+    k = 0;
+    h = 1;
+    while (n > 0) {
+        if ((n % 2) != 0) {
+            t = j * h;
+            j = (i * h) + (j * k) + t;
+            i = (i * k) + t;
+        }
+        t = h * h;
+        h = (2 * k * h) + t;
+        k = (k * k) + t;
+        n = n / 2;
+    }
+    return j;
 }
 
 
-double tiempos(void (*alg)(int v[], int tamanho), void (*vector)(int v[], int tamanho), int tamanho) {
+void timeRecord(int n, int fib) {
 
-    double t1, t2, t, prima;
-    int i;
-    int *v;
-
-    v = malloc(tamanho * sizeof(int));
-    vector(v, tamanho);
-
+    double t1, t2, t, x, y, z;
+    int counter = 0;
     t1 = microsegundos();
-    alg(v, tamanho);
+    fibs[fib - 1].fib_fun(n);
     t2 = microsegundos();
     t = t2 - t1;
     if (t < 500) {
         t1 = microsegundos();
-        for (i = 0; i < K; i++) {
-            vector(v, tamanho);
-            alg(v, tamanho);
+        for (counter = 0; counter < K; ++counter) {
+            fibs[fib - 1].fib_fun(n);
         }
         t2 = microsegundos();
-        prima = t2 - t1;
-        t1 = microsegundos();
-        for (i = 0; i < K; i++) {
-            vector(v, tamanho);
-        }
-        t2 = microsegundos();
-        t = t2 - t1;
-        t = (prima - t) / K;
+        t = (t2 - t1) / 1000;
     }
-    free(v);
-    return t;
-}
-
-void CalComplejidad(void (*ini)(int v[], int n), void(*algo)(int v[], int n), cota (*cta)(int n, enum tCota t)) {
-
-
-    printf(" ______[N]___________[Tiempo]____%s%s%s____[t<500]_ \n\n", cta(1, SUB).string, cta(1, AJU).string,
-           cta(1, SOBR).string);
-
-    double tiempo;
-    for (int n = 500; n <= 32000; n *= 2) {
-
-        tiempo = tiempos(algo, ini, n);
-        printf("%10d    \t|%14.3f\t|%14.8f\t|%14.8f\t|%14.8f\t    |", n,
-               tiempo, tiempo / cta(n, SUB).value, tiempo / cta(n, AJU).value,
-               tiempo / cta(n, SOBR).value);
-        if (tiempo < 500) {
-            printf("  (*)");
-        }
-        printf("\n    \t\t|               |               |               |                   |\n");
+    switch (fib) {
+        case 1:
+            x = t / pow((1 + sqrt(5)) / 2, n);
+            y = t / pow(1.1f, n);
+            z = t / pow(2, n);
+            break;
+        case 2:
+            x = t / n;
+            y = t / pow(n, 0.8f);
+            z = t / (n * log10(n));
+            break;
+        case 3:
+            x = t / log10(n);
+            y = t / sqrt((log10(n)));
+            z = t / pow(n, 0.5f);
+            break;
+        default:
+            break;
     }
 
+    printf("%10d    \t|%14.3f\t|%14.6f\t|%14.6f\t|%14.6f\t    |", n, t, x, y, z);
+    if (counter > 0) { printf("  (*)"); }
+    printf("\n    \t\t|               |               |               |                   |\n");
+}
+
+void testfib1() {
+
+    timeRecord(2, 1);
+    timeRecord(4, 1);
+    timeRecord(8, 1);
+    timeRecord(16, 1);
+    timeRecord(32, 1);
+
 
 }
 
-void TestComplejidad() {
-    printf("\n****************** Ordenación por INSERCION con inicialización ASCENDENTE ******************\n\n");
-    CalComplejidad(ascendente, ord_ins, cAscendeteIns);
-    printf("\n****************** Ordenación por INSERCION con inicialización DESCENDENTE ******************\n\n");
-    CalComplejidad(descendente, ord_ins, cDescendeteIns);
-    printf("\n\n\n****************** Ordenación por INSERCION con inicialización ALEATORIA ******************\n\n");
-    CalComplejidad(aleatorio, ord_ins, cAleatorioIns);
+void testfib2() {
+
+    timeRecord(1000, 2);
+    timeRecord(10000, 2);
+    timeRecord(100000, 2);
+    timeRecord(1000000, 2);
+    timeRecord(10000000, 2);
 
 
-    printf("\n****************** Ordenación RAPIDA con inicialización ASCENDENTE ******************\n\n");
-    CalComplejidad(ascendente, ord_rapida, cAscendeteRap);
-    printf("\n****************** Ordenación RAPIDA con inicialización DESCENDENTE ******************\n\n");
-    CalComplejidad(descendente, ord_rapida, cDescendeteRap);
-    printf("\n\n\n****************** Ordenación RAPIDA con inicialización ALEATORIA ******************\n\n");
-    CalComplejidad(aleatorio, ord_rapida, cAleatorioRap);
+}
+
+void testfib3() {
+    timeRecord(1000, 3);
+    timeRecord(10000, 3);
+    timeRecord(100000, 3);
+    timeRecord(1000000, 3);
+    timeRecord(10000000, 3);
+
+}
+
+void tabla(int n) {
+
+    printf("n\t|\tfib1(n)\t\tfib2()\t\tfib(3)");
+    printf("\n-----------------------------------------------------------");
+
+    for (int i = 1; i <= n; ++i) {
+
+        printf("\n%d\t|\t%d\t\t%d\t\t%d", i, fib1(i), fib2(i), fib3(i));
+
+    }
+    printf("\n");
+
+}
+
+void Tiempos() {
+    printf("\n _______________________________________ Test con Fib1 ________________________________________ \n");
+
+    printf(" ______[N]___________[Tiempo]_______[Ajustada]_____[Subestimada]____[SobreEstimada]_____[t<500]_ \n\n");
+    testfib1();
+
+    printf("\n _______________________________________ Test con Fib2 ________________________________________ \n");
+    printf(" ______[N]___________[Tiempo]_______[Ajustada]_____[Subestimada]____[SobreEstimada]_____[t<500]_ \n\n");
+    testfib2();
+
+
+    printf("\n _______________________________________ Test con Fib3 ________________________________________ \n");
+    printf(" ______[N]___________[Tiempo]_______[Ajustada]_____[Subestimada]____[SobreEstimada]_____[t<500]_ \n\n");
+
+    testfib3();
+
 }
 
 int main() {
 
-    inicializar_semilla();
-
-    TestOrdenacion();
-    TestComplejidad();
+    Tiempos();
+    printf("\n\n");
+    tabla(20);
 
 
     return 0;
