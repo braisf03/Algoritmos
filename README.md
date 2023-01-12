@@ -1,6 +1,6 @@
 # Algoritmos
 
-Prácticas Algoritmos (curso 2021/22)
+Prácticas Algoritmos (curso 2022/23)
 
 ## Calificaciones
 
