@@ -7,5 +7,5 @@ Prácticas Algoritmos (curso 2021/22)
 - **Práctica 1:** *8'50*
 - **Práctica 2:** *9'50*
 - **Práctica 3:** *8'50*
-- **Práctica 4:** *8'50*
+- **Práctica 4:** *8'67*
 - **Examen:** *NaN*
