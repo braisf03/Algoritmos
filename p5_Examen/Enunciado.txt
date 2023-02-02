@@ -1,5 +1,4 @@
 Enunciado:
-
 procedimiento ordenar ( var v[1..n] )
   ordenarAux ( v[1..n] )
 fin procedemento
@@ -16,8 +15,22 @@ fin procedimiento
 procedimiento intercalar ( var v[izq..der], centro )
   i:= izq ; j:= centro + 1 ;
   k := 1 ;
-  { Se usa un vector auxiliar (aux) de longitud *der-izq+1* }
+  { Se usa un vector auxiliar (aux) de longitud der-izq+1 }
   mientras k <= der-izq+1 hacer
     si j > der entonces
-      aux[k] := v[i] ; i:= i + 1 ;
+      aux[k] := v[i] ; i := i + 1 ;
     sino si i > centro entonces
+      aux[k] := v[j] ; j := j + 1 ;
+    sino si v[i] <= v[j] entonces
+      aux[k] := v[i] ; i := i + 1 ;
+    sino
+      aux[k] := v[j] ; j := j + 1 ;
+    fin si
+    k := k + 1 ;
+  fin mientras
+  k := 1 ;
+  para i := izq hasta der hacer
+    v[i] := aux[k] ;
+    k := k + 1
+  fin para
+fin procedimiento
