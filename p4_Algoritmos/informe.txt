@@ -1,9 +1,3 @@
- -Grupo 3.1-
- Fernando Álvarez Rodríguez de Legísima 
- fernando.alvarezr@udc.es
- Brais Sánchez Ferreiro
- brais.sferreiro@udc.es
-
 #Informe práctica 4:
    El objetivo de esta práctica es estudiar la complejidad computacional 
    empírica de las operaciones de crear y ordenar montículo de n posiciones.
