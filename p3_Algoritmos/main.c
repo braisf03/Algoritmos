@@ -1,15 +1,3 @@
-/*
-Fernando Álvarez Rodríguez de Legísima
-fernando.alvarezr@udc.es
-Brais Sánchez Ferreiro
-brais.sferreiro@udc.es 
-*/
-/*
-Fernando Álvarez Rodríguez de Legísima
-fernando.alvarezr@udc.es
-Brais Sánchez Ferreiro
-brais.sferreiro@udc.es
-*/
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
