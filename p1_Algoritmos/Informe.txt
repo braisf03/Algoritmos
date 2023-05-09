@@ -1,6 +1,3 @@
-Fernando Álvarez Rodríguez de Legísima
-Brais Sánchez Ferreiro
-
 Los datos del equipo utilizado para ejecutar estas mediciones son:
 
 Equipo Asus Rog Zephyrus (Portátil)
